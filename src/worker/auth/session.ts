@@ -1,6 +1,8 @@
 import { and, eq, gt } from 'drizzle-orm'
+import type { Context } from 'hono'
 import { createMiddleware } from 'hono/factory'
 import { deleteCookie, getCookie } from 'hono/cookie'
+import { HTTPException } from 'hono/http-exception'
 import { createDb, type Db } from '../db/client'
 import { sessions, users } from '../db/schema'
 import type { AppEnv, User } from '../types'
@@ -49,3 +51,10 @@ export const loadSessionUser = createMiddleware<AppEnv>(async (c, next) => {
   c.set('user', user)
   await next()
 })
+
+// ログイン必須の API で使う。未ログインなら 401
+export function requireUser(c: Context<AppEnv>): User {
+  const user = c.get('user')
+  if (!user) throw new HTTPException(401)
+  return user
+}

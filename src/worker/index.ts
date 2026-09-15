@@ -2,6 +2,7 @@ import { Hono } from 'hono'
 import { csrf } from 'hono/csrf'
 import { authRoutes } from './auth/routes'
 import { loadSessionUser } from './auth/session'
+import { expenseRoutes } from './expenses/routes'
 import type { AppEnv } from './types'
 
 const app = new Hono<AppEnv>()
@@ -11,6 +12,7 @@ app.use(csrf())
 app.use(loadSessionUser)
 
 app.route('/auth', authRoutes)
+app.route('/api/expenses', expenseRoutes)
 
 // ログイン中のユーザー。未ログインなら user: null
 app.get('/api/me', (c) => {
