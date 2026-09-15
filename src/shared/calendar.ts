@@ -31,23 +31,44 @@ export function computeStreak(spendDates: ReadonlySet<string>, trackingStartDate
 
 export type DayStatus = 'outside' | 'no-spend' | 'spend'
 
+// 通貨ごとの合計(最小単位)
+export type CurrencyTotal = { currency: string; amount: number }
+
 export type DayCell = {
   date: string
   status: DayStatus
-  // その日の支出合計(最小単位)
-  total: number
+  // その日の支出合計。通貨が違う金額は足し合わせない
+  totals: CurrencyTotal[]
+}
+
+// 支出を日付ごと・通貨ごとに合計する。通貨の並びは最初に現れた順
+export function sumByDateAndCurrency(
+  expenses: readonly { date: string; currency: string; amount: number }[],
+): Map<string, CurrencyTotal[]> {
+  const result = new Map<string, CurrencyTotal[]>()
+  for (const { date, currency, amount } of expenses) {
+    const totals = result.get(date) ?? []
+    const existing = totals.find((total) => total.currency === currency)
+    if (existing) {
+      existing.amount += amount
+    } else {
+      totals.push({ currency, amount })
+    }
+    result.set(date, totals)
+  }
+  return result
 }
 
 export function buildDayCell(
   date: string,
-  dailyTotals: ReadonlyMap<string, number>,
+  dailyTotals: ReadonlyMap<string, readonly CurrencyTotal[]>,
   range: { trackingStartDate: string; today: string },
 ): DayCell {
   if (date < range.trackingStartDate || date > range.today) {
-    return { date, status: 'outside', total: 0 }
+    return { date, status: 'outside', totals: [] }
   }
-  const total = dailyTotals.get(date) ?? 0
-  return { date, status: total === 0 ? 'no-spend' : 'spend', total }
+  const totals = [...(dailyTotals.get(date) ?? [])]
+  return { date, status: totals.length === 0 ? 'no-spend' : 'spend', totals }
 }
 
 // GitHub の草と同じく、今日を含む週を最後にした 53 週分(各週は日曜始まり)

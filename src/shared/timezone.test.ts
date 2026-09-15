@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest'
-import { DEFAULT_TIMEZONE, normalizeTimezone, todayIn } from './timezone'
+import { DEFAULT_TIMEZONE, isValidTimezone, normalizeTimezone, todayIn } from './timezone'
+
+describe('isValidTimezone', () => {
+  it('IANA 名を受け付け、不正な値・空・文字列以外を拒否する', () => {
+    expect(isValidTimezone('Europe/London')).toBe(true)
+    expect(isValidTimezone('Not/AZone')).toBe(false)
+    expect(isValidTimezone('')).toBe(false)
+    expect(isValidTimezone(1)).toBe(false)
+  })
+})
 
 describe('normalizeTimezone', () => {
   it('有効な IANA 名はそのまま返す', () => {

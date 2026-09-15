@@ -8,6 +8,7 @@ import {
   monthBoundary,
   monthGridDates,
   monthStartInWeek,
+  sumByDateAndCurrency,
   yearGridWeeks,
 } from './calendar'
 
@@ -72,9 +73,25 @@ describe('computeStreak', () => {
   })
 })
 
+describe('sumByDateAndCurrency', () => {
+  it('日付ごとに、通貨が違う金額は足さずに合計する', () => {
+    const totals = sumByDateAndCurrency([
+      { date: '2026-09-12', currency: 'JPY', amount: 500 },
+      { date: '2026-09-12', currency: 'GBP', amount: 350 },
+      { date: '2026-09-12', currency: 'JPY', amount: 200 },
+      { date: '2026-09-13', currency: 'JPY', amount: 100 },
+    ])
+    expect(totals.get('2026-09-12')).toEqual([
+      { currency: 'JPY', amount: 700 },
+      { currency: 'GBP', amount: 350 },
+    ])
+    expect(totals.get('2026-09-13')).toEqual([{ currency: 'JPY', amount: 100 }])
+  })
+})
+
 describe('buildDayCell', () => {
   const range = { trackingStartDate: '2026-09-10', today: '2026-09-16' }
-  const totals = new Map([['2026-09-12', 500]])
+  const totals = new Map([['2026-09-12', [{ currency: 'JPY', amount: 500 }]]])
 
   it('記録開始日より前と未来は範囲外', () => {
     expect(buildDayCell('2026-09-09', totals, range).status).toBe('outside')
@@ -82,8 +99,12 @@ describe('buildDayCell', () => {
   })
 
   it('支出がある日は spend、ない日は no-spend', () => {
-    expect(buildDayCell('2026-09-12', totals, range)).toEqual({ date: '2026-09-12', status: 'spend', total: 500 })
-    expect(buildDayCell('2026-09-13', totals, range)).toEqual({ date: '2026-09-13', status: 'no-spend', total: 0 })
+    expect(buildDayCell('2026-09-12', totals, range)).toEqual({
+      date: '2026-09-12',
+      status: 'spend',
+      totals: [{ currency: 'JPY', amount: 500 }],
+    })
+    expect(buildDayCell('2026-09-13', totals, range)).toEqual({ date: '2026-09-13', status: 'no-spend', totals: [] })
   })
 })
 

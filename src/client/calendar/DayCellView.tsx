@@ -6,7 +6,6 @@ import { formatMoney } from '../lib/money'
 
 type Props = {
   cell: DayCell
-  currency: string
   label?: string
   isToday: boolean
   // 月の境目の線を引く辺(草のみ)
@@ -15,7 +14,7 @@ type Props = {
 }
 
 // 草・月カレンダー共通のマス。範囲外の日は押せない
-export function DayCellView({ cell, currency, label, isToday, boundary, onSelect }: Props) {
+export function DayCellView({ cell, label, isToday, boundary, onSelect }: Props) {
   const { t } = useTranslation()
   const locale = useLocale()
   const classNames = [
@@ -26,10 +25,10 @@ export function DayCellView({ cell, currency, label, isToday, boundary, onSelect
     boundary?.top && 'boundary-top',
   ]
   const date = formatDate(cell.date, locale)
+  // 通貨が違う金額は換算せず「¥500 + £3.50」のように並べる
+  const spent = cell.totals.map((total) => formatMoney(total.amount, total.currency, locale)).join(' + ')
   const description =
-    cell.status === 'outside'
-      ? date
-      : `${date}: ${cell.status === 'no-spend' ? t('calendar.noSpend') : formatMoney(cell.total, currency, locale)}`
+    cell.status === 'outside' ? date : `${date}: ${cell.status === 'no-spend' ? t('calendar.noSpend') : spent}`
 
   return (
     <button

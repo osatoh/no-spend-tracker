@@ -40,6 +40,12 @@ export async function fetchMe(): Promise<Me | null> {
   return ((await res.json()) as { user: Me | null }).user
 }
 
+// タイムゾーン・通貨の変更。変更後のユーザー情報を返す
+export async function updateSettings(input: { timezone?: string; currency?: string }): Promise<Me> {
+  const res = await send('/api/me', { method: 'PATCH', body: JSON.stringify(input) })
+  return ((await res.json()) as { user: Me }).user
+}
+
 // 退会。アカウントとすべての支出を削除し、ログアウト状態にする
 export async function deleteAccount(): Promise<void> {
   await send('/api/me', { method: 'DELETE' })

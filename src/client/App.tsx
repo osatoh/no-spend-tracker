@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BrowserRouter, Link, Navigate, Outlet, Route, Routes } from 'react-router'
-import { computeStreak } from '../shared/calendar'
+import { computeStreak, sumByDateAndCurrency } from '../shared/calendar'
 import { todayIn } from '../shared/timezone'
 import { deleteExpense, fetchExpenses, fetchMe, type Expense, type Me } from './api'
 import { Avatar } from './Avatar'
@@ -38,7 +38,7 @@ export function App() {
       <Routes>
         <Route element={<Layout me={me} />}>
           <Route index element={<Home me={me} />} />
-          <Route path="settings" element={<Settings me={me} />} />
+          <Route path="settings" element={<Settings me={me} onMeChange={setMe} />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
@@ -105,18 +105,14 @@ function Home({ me }: { me: Me }) {
     reload()
   }
 
-  // 当面は通貨が1つなので、通貨を区別せずに日ごとに合計する
-  const dailyTotals = new Map<string, number>()
-  for (const expense of expenses) {
-    dailyTotals.set(expense.date, (dailyTotals.get(expense.date) ?? 0) + expense.amount)
-  }
+  // 草と streak は「その日に支出があるか」だけで決まるので、通貨が混ざっても影響しない
+  const dailyTotals = sumByDateAndCurrency(expenses)
   const streak = computeStreak(new Set(dailyTotals.keys()), me.trackingStartDate, today)
 
   const calendarProps = {
     dailyTotals,
     trackingStartDate: me.trackingStartDate,
     today,
-    currency: me.currency,
     onSelect: (date: string) => setDialog({ kind: 'new', date }),
   }
 

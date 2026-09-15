@@ -7,6 +7,8 @@ export type ApiErrorCode =
   | 'invalid_amount'
   | 'invalid_note'
   | 'note_too_long'
+  | 'invalid_timezone'
+  | 'invalid_currency'
   | 'not_found'
   | 'rate_limited'
   | 'request_failed'

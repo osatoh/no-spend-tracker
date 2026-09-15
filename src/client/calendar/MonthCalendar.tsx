@@ -7,7 +7,7 @@ import { DayCellView } from './DayCellView'
 import type { CalendarProps } from './types'
 
 // 1か月分のカレンダー。記録開始月から今月まで切り替えられる
-export function MonthCalendar({ dailyTotals, trackingStartDate, today, currency, onSelect }: CalendarProps) {
+export function MonthCalendar({ dailyTotals, trackingStartDate, today, onSelect }: CalendarProps) {
   const { t } = useTranslation()
   const locale = useLocale()
   const currentMonth = today.slice(0, 7)
@@ -39,7 +39,6 @@ export function MonthCalendar({ dailyTotals, trackingStartDate, today, currency,
             <DayCellView
               key={date}
               cell={buildDayCell(date, dailyTotals, range)}
-              currency={currency}
               label={String(Number(date.slice(8)))}
               isToday={date === today}
               onSelect={onSelect}

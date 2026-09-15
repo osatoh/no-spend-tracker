@@ -8,7 +8,7 @@ import type { CalendarProps } from './types'
 const LABELED_WEEKDAYS = new Set([1, 3, 5])
 
 // GitHub の草のような直近1年のグリッド
-export function YearGrid({ dailyTotals, trackingStartDate, today, currency, onSelect }: CalendarProps) {
+export function YearGrid({ dailyTotals, trackingStartDate, today, onSelect }: CalendarProps) {
   const locale = useLocale()
   const weeks = yearGridWeeks(today)
   const range = { trackingStartDate, today }
@@ -32,7 +32,6 @@ export function YearGrid({ dailyTotals, trackingStartDate, today, currency, onSe
               <DayCellView
                 key={date}
                 cell={buildDayCell(date, dailyTotals, range)}
-                currency={currency}
                 isToday={date === today}
                 boundary={monthBoundary(date, weekIndex === 0)}
                 onSelect={onSelect}

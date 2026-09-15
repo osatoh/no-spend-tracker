@@ -112,6 +112,25 @@ button,
   margin: 0 0 0.75rem;
 }
 
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.settings-field select {
+  max-width: 100%;
+}
+
+.settings-field small {
+  opacity: 0.75;
+}
+
+.save-status {
+  min-height: 1.5em;
+}
+
 .danger {
   border-color: var(--danger);
   color: var(--danger);
