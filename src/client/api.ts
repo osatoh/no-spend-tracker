@@ -3,6 +3,7 @@ import type { ApiErrorCode } from '../shared/apiErrors'
 export type Me = {
   name: string | null
   email: string
+  pictureUrl: string | null
   currency: string
   timezone: string
   trackingStartDate: string
@@ -37,6 +38,11 @@ async function send(path: string, init?: RequestInit): Promise<Response> {
 export async function fetchMe(): Promise<Me | null> {
   const res = await send('/api/me')
   return ((await res.json()) as { user: Me | null }).user
+}
+
+// 退会。アカウントとすべての支出を削除し、ログアウト状態にする
+export async function deleteAccount(): Promise<void> {
+  await send('/api/me', { method: 'DELETE' })
 }
 
 export async function fetchExpenses(): Promise<Expense[]> {

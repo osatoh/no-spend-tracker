@@ -11,6 +11,19 @@ export const ja = {
   language: {
     label: '言語',
   },
+  header: {
+    openSettings: '設定を開く',
+  },
+  settings: {
+    title: '設定',
+    language: '表示言語',
+    account: 'アカウント',
+    signedInAs: '{{email}} でログイン中',
+    about: 'このアプリについて',
+    deleteAccount: 'アカウントを削除',
+    deleteDescription: 'アカウントとすべての支出の記録を完全に削除します。元に戻すことはできません。',
+    confirmDelete: 'アカウントとすべての支出の記録を削除しますか？元に戻すことはできません。',
+  },
   footer: {
     privacy: 'プライバシーポリシー',
     source: 'ソースコード',

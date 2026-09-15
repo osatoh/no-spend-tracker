@@ -12,6 +12,19 @@ export const en = {
   language: {
     label: 'Language',
   },
+  header: {
+    openSettings: 'Open settings',
+  },
+  settings: {
+    title: 'Settings',
+    language: 'Language',
+    account: 'Account',
+    signedInAs: 'Signed in as {{email}}',
+    about: 'About',
+    deleteAccount: 'Delete account',
+    deleteDescription: 'Permanently delete your account and all spending records. This cannot be undone.',
+    confirmDelete: 'Delete your account and all spending records? This cannot be undone.',
+  },
   footer: {
     privacy: 'Privacy Policy',
     source: 'Source code',

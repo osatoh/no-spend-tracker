@@ -1,14 +1,17 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { BrowserRouter, Link, Navigate, Outlet, Route, Routes } from 'react-router'
 import { computeStreak } from '../shared/calendar'
 import { todayIn } from '../shared/timezone'
 import { deleteExpense, fetchExpenses, fetchMe, type Expense, type Me } from './api'
+import { Avatar } from './Avatar'
 import { MonthCalendar } from './calendar/MonthCalendar'
 import { YearGrid } from './calendar/YearGrid'
 import { ExpenseDialog } from './ExpenseDialog'
 import { Footer } from './Footer'
 import { useLocale } from './i18n/useLocale'
 import { LanguageSwitcher } from './LanguageSwitcher'
+import { Settings } from './Settings'
 import { StreakBanner } from './StreakBanner'
 import { formatDate } from './lib/dateFormat'
 import { formatMoney } from './lib/money'
@@ -20,7 +23,6 @@ type DialogState = null | { kind: 'new'; date: string } | { kind: 'edit'; expens
 const NARROW_SCREEN_QUERY = '(max-width: 640px)'
 
 export function App() {
-  const { t } = useTranslation()
   // undefined: 読み込み中 / null: 未ログイン
   const [me, setMe] = useState<Me | null | undefined>(undefined)
 
@@ -29,25 +31,59 @@ export function App() {
   }, [])
 
   if (me === undefined) return null
+  if (me === null) return <SignIn />
 
-  if (me === null) {
-    // サインアップ時のタイムゾーンとしてブラウザの値を渡す
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
-    return (
-      <main>
-        <header>
-          <h1>{t('app.title')}</h1>
-          <LanguageSwitcher />
-        </header>
-        <a className="button primary" href={`/auth/google?tz=${encodeURIComponent(tz)}`}>
-          {t('auth.signIn')}
-        </a>
-        <Footer />
-      </main>
-    )
-  }
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route element={<Layout me={me} />}>
+          <Route index element={<Home me={me} />} />
+          <Route path="settings" element={<Settings me={me} />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  )
+}
 
-  return <Home me={me} />
+// 未ログインの画面。設定画面を開けないので、ここでも言語を切り替えられるようにする
+function SignIn() {
+  const { t } = useTranslation()
+  // サインアップ時のタイムゾーンとしてブラウザの値を渡す
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
+
+  return (
+    <main>
+      <header>
+        <h1>{t('app.title')}</h1>
+        <LanguageSwitcher />
+      </header>
+      <a className="button primary" href={`/auth/google?tz=${encodeURIComponent(tz)}`}>
+        {t('auth.signIn')}
+      </a>
+      <Footer />
+    </main>
+  )
+}
+
+function Layout({ me }: { me: Me }) {
+  const { t } = useTranslation()
+
+  return (
+    <main>
+      <header>
+        <h1>
+          <Link to="/" className="title-link">
+            {t('app.title')}
+          </Link>
+        </h1>
+        <Link to="/settings" className="avatar-link" aria-label={t('header.openSettings')}>
+          <Avatar me={me} />
+        </Link>
+      </header>
+      <Outlet />
+    </main>
+  )
 }
 
 function Home({ me }: { me: Me }) {
@@ -85,23 +121,12 @@ function Home({ me }: { me: Me }) {
   }
 
   return (
-    <main>
-      <header>
-        <h1>{t('app.title')}</h1>
-        <div className="header-actions">
-          <LanguageSwitcher />
-          <form method="post" action="/auth/logout">
-            <span>{me.name ?? me.email}</span>
-            <button>{t('auth.signOut')}</button>
-          </form>
-        </div>
-      </header>
-
+    <>
       <StreakBanner streak={streak} />
 
       {isNarrow ? <MonthCalendar {...calendarProps} /> : <YearGrid {...calendarProps} />}
 
-      <button className="primary" onClick={() => setDialog({ kind: 'new', date: today })}>
+      <button className="primary add-expense" onClick={() => setDialog({ kind: 'new', date: today })}>
         {t('expenses.addToday')}
       </button>
 
@@ -125,9 +150,7 @@ function Home({ me }: { me: Me }) {
           }}
         />
       )}
-
-      <Footer />
-    </main>
+    </>
   )
 }
 
