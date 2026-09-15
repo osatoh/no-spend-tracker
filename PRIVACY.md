@@ -10,7 +10,7 @@ This policy explains how No-Spend Tracker ("the app", https://no-spend-tracker.n
 
 ### Information we collect
 - **Google account information**: when you sign in with Google, we receive your Google account ID, email address, name and profile picture URL (the picture is shown as your avatar)
-- **Settings**: your timezone (taken from your browser at sign-up) and currency
+- **Settings**: your timezone (taken from your browser at sign-up), currency and daily budget
 - **Spending records**: the date, amount and note of each entry you log
 
 We do not collect payment details, location data or contacts.
@@ -34,6 +34,8 @@ We do not sell your information, share it with third parties for their own purpo
 These providers process data on our behalf under their own privacy policies:
 [Cloudflare](https://www.cloudflare.com/privacypolicy/) / [Google](https://policies.google.com/privacy)
 
+Exchange rates for stats are fetched by our server from [Frankfurter](https://frankfurter.dev/). No personal information is sent, and your browser does not contact it directly.
+
 ### Retention and deletion
 This policy is linked from the sign-in screen and from Settings in the app.
 
@@ -56,7 +58,7 @@ Please open an issue at https://github.com/osatoh/no-spend-tracker/issues. Do no
 
 ### 取得する情報
 - **Google アカウントの情報**: Google でログインした際に、Google アカウントの ID、メールアドレス、名前、プロフィール画像の URL を受け取ります (画像はアイコンとして表示します)
-- **設定**: タイムゾーン (サインアップ時にブラウザから取得) と通貨
+- **設定**: タイムゾーン (サインアップ時にブラウザから取得)、通貨、1日の目安額
 - **支出の記録**: 登録された各支出の日付、金額、内訳
 
 決済情報、位置情報、連絡先などは取得しません。
@@ -79,6 +81,8 @@ Please open an issue at https://github.com/osatoh/no-spend-tracker/issues. Do no
 
 各社はそれぞれのプライバシーポリシーに基づいてデータを取り扱います:
 [Cloudflare](https://www.cloudflare.com/privacypolicy/) / [Google](https://policies.google.com/privacy)
+
+統計に使う為替レートは、本アプリのサーバーが [Frankfurter](https://frankfurter.dev/) から取得します。個人情報は送信せず、利用者のブラウザから直接通信することもありません。
 
 ### 保存期間と削除
 本ポリシーへのリンクは、アプリのログイン画面と設定画面にあります。
