@@ -3,6 +3,8 @@
   "name": "no-spend-tracker",
   "main": "src/worker/index.ts",
   "compatibility_date": "2026-09-15",
+  // D1(APAC)から遠い地域のリクエストでも DB への往復を減らせるよう、Worker の実行場所を自動で最適化する
+  "placement": { "mode": "smart" },
   "assets": {
     // 未知のパスは index.html を返し、React 側でルーティングする
     "not_found_handling": "single-page-application",
