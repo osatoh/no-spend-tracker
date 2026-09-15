@@ -56,7 +56,9 @@ export const en = {
     allTime: 'All time',
     month: 'Month',
     noSpendRate: 'No-spend rate',
-    noSpendDays: '{{noSpend}} of {{tracked}} days without spending',
+    // count は記録した日数。1日のときは day、それ以外は days にする
+    noSpendDays_one: '{{noSpend}} of {{count}} day without spending',
+    noSpendDays_other: '{{noSpend}} of {{count}} days without spending',
     saved: 'Saved',
     setBudget: 'Set a daily budget to see how much you saved.',
     ratesUnavailable: "Exchange rates aren't available right now, so savings can't be calculated.",

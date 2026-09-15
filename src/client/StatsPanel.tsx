@@ -74,7 +74,7 @@ export function StatsPanel({ me, expenses, today }: Props) {
             <h3>{label}</h3>
             <p className="stats-rate">{rateText(period)}</p>
             <p className="stats-sub">
-              {t('stats.noSpendDays', { noSpend: period.noSpendDays, tracked: period.trackedDays })}
+              {t('stats.noSpendDays', { noSpend: period.noSpendDays, count: period.trackedDays })}
             </p>
             <p className="stats-saved">
               {t('stats.saved')}: <strong>{savedText(period)}</strong>

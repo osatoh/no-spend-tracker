@@ -55,7 +55,9 @@ export const ja = {
     allTime: '累計',
     month: '月',
     noSpendRate: 'no-spend 率',
-    noSpendDays: '{{tracked}}日中 {{noSpend}}日 支出なし',
+    // 日本語に複数形はないが、キーの形を en に揃える
+    noSpendDays_one: '{{count}}日中 {{noSpend}}日 支出なし',
+    noSpendDays_other: '{{count}}日中 {{noSpend}}日 支出なし',
     saved: '節約額',
     setBudget: '1日の目安額を設定すると、節約額を表示できます。',
     ratesUnavailable: '為替レートを取得できないため、節約額を計算できません。',
