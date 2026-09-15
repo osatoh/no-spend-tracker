@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { useTranslation } from 'react-i18next'
+import type { ApiErrorCode } from '../shared/apiErrors'
 import { ApiError, createExpense, updateExpense, type Expense } from './api'
 import { fractionDigits, toMajorUnits, toMinorUnits } from './lib/money'
 
@@ -18,11 +20,12 @@ type Props = {
 
 // 支出の登録・編集モーダル。表示中だけマウントする
 export function ExpenseDialog({ expense, defaultDate, today, minDate, currency, onClose, onSaved }: Props) {
+  const { t } = useTranslation()
   const dialogRef = useRef<HTMLDialogElement>(null)
   const [date, setDate] = useState(expense?.date ?? defaultDate)
   const [note, setNote] = useState(expense?.note ?? '')
   const [amount, setAmount] = useState(expense ? toMajorUnits(expense.amount, expense.currency) : '')
-  const [errors, setErrors] = useState<string[]>([])
+  const [errors, setErrors] = useState<ApiErrorCode[]>([])
   const [saving, setSaving] = useState(false)
 
   // 編集時は登録時の通貨で入力させる
@@ -37,7 +40,7 @@ export function ExpenseDialog({ expense, defaultDate, today, minDate, currency, 
     e.preventDefault()
     const amountMinor = toMinorUnits(amount, inputCurrency)
     if (amountMinor === null) {
-      setErrors(['金額を入力してください'])
+      setErrors(['invalid_amount'])
       return
     }
     const input = { date, amount: amountMinor, note: note.trim() === '' ? null : note }
@@ -50,7 +53,7 @@ export function ExpenseDialog({ expense, defaultDate, today, minDate, currency, 
       }
       onSaved()
     } catch (err) {
-      setErrors(err instanceof ApiError ? err.messages : ['保存に失敗しました'])
+      setErrors(err instanceof ApiError ? err.codes : ['request_failed'])
       setSaving(false)
     }
   }
@@ -59,26 +62,26 @@ export function ExpenseDialog({ expense, defaultDate, today, minDate, currency, 
     // Esc キーで閉じたときも親の状態を戻す
     <dialog ref={dialogRef} className="expense-dialog" onClose={onClose}>
       <form onSubmit={handleSubmit}>
-        <h2>{expense ? '支出を編集' : '支出を入力'}</h2>
+        <h2>{expense ? t('dialog.editTitle') : t('dialog.newTitle')}</h2>
 
         <label>
-          日付
+          {t('dialog.date')}
           <input type="date" value={date} min={minDate} max={today} required onChange={(e) => setDate(e.target.value)} />
         </label>
 
         <label>
-          内訳
+          {t('dialog.note')}
           <input
             type="text"
             value={note}
             maxLength={MAX_NOTE_LENGTH}
-            placeholder="例: コンビニのお菓子"
+            placeholder={t('dialog.notePlaceholder')}
             onChange={(e) => setNote(e.target.value)}
           />
         </label>
 
         <label>
-          金額({inputCurrency})
+          {t('dialog.amount', { currency: inputCurrency })}
           <input
             type="number"
             inputMode={digits === 0 ? 'numeric' : 'decimal'}
@@ -92,18 +95,18 @@ export function ExpenseDialog({ expense, defaultDate, today, minDate, currency, 
 
         {errors.length > 0 && (
           <ul className="errors" role="alert">
-            {errors.map((message) => (
-              <li key={message}>{message}</li>
+            {errors.map((code) => (
+              <li key={code}>{t(`errors.${code}`, { minDate, max: MAX_NOTE_LENGTH })}</li>
             ))}
           </ul>
         )}
 
         <div className="actions">
           <button type="button" onClick={() => dialogRef.current?.close()}>
-            キャンセル
+            {t('dialog.cancel')}
           </button>
           <button type="submit" className="primary" disabled={saving}>
-            {expense ? '更新' : '登録'}
+            {expense ? t('dialog.update') : t('dialog.create')}
           </button>
         </div>
       </form>

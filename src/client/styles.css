@@ -32,10 +32,17 @@ header {
   justify-content: space-between;
 }
 
-header form {
+header form,
+header .header-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
   align-items: center;
+}
+
+select {
+  padding: 0.35rem;
+  font: inherit;
 }
 
 button,

@@ -1,4 +1,7 @@
+import { useTranslation } from 'react-i18next'
 import type { DayCell } from '../../shared/calendar'
+import { useLocale } from '../i18n/useLocale'
+import { formatDate } from '../lib/dateFormat'
 import { formatMoney } from '../lib/money'
 
 type Props = {
@@ -13,6 +16,8 @@ type Props = {
 
 // 草・月カレンダー共通のマス。範囲外の日は押せない
 export function DayCellView({ cell, currency, label, isToday, boundary, onSelect }: Props) {
+  const { t } = useTranslation()
+  const locale = useLocale()
   const classNames = [
     'day-cell',
     cell.status,
@@ -20,10 +25,11 @@ export function DayCellView({ cell, currency, label, isToday, boundary, onSelect
     boundary?.left && 'boundary-left',
     boundary?.top && 'boundary-top',
   ]
+  const date = formatDate(cell.date, locale)
   const description =
     cell.status === 'outside'
-      ? cell.date
-      : `${cell.date}: ${cell.status === 'no-spend' ? 'no-spend 🎉' : formatMoney(cell.total, currency)}`
+      ? date
+      : `${date}: ${cell.status === 'no-spend' ? t('calendar.noSpend') : formatMoney(cell.total, currency, locale)}`
 
   return (
     <button

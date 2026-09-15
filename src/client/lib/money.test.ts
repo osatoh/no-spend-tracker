@@ -3,7 +3,7 @@ import { formatMoney, toMajorUnits, toMinorUnits } from './money'
 
 describe('formatMoney', () => {
   it('JPY は整数のまま、GBP はペンスをポンドにして表示する', () => {
-    expect(formatMoney(1500, 'JPY')).toContain('1,500')
+    expect(formatMoney(1500, 'JPY', 'ja')).toContain('1,500')
     expect(formatMoney(350, 'GBP', 'en-GB')).toBe('£3.50')
   })
 })

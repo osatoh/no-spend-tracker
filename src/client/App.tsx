@@ -1,11 +1,15 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { computeStreak } from '../shared/calendar'
 import { todayIn } from '../shared/timezone'
 import { deleteExpense, fetchExpenses, fetchMe, type Expense, type Me } from './api'
 import { MonthCalendar } from './calendar/MonthCalendar'
 import { YearGrid } from './calendar/YearGrid'
 import { ExpenseDialog } from './ExpenseDialog'
+import { useLocale } from './i18n/useLocale'
+import { LanguageSwitcher } from './LanguageSwitcher'
 import { StreakBanner } from './StreakBanner'
+import { formatDate } from './lib/dateFormat'
 import { formatMoney } from './lib/money'
 import { useMediaQuery } from './lib/useMediaQuery'
 
@@ -15,6 +19,7 @@ type DialogState = null | { kind: 'new'; date: string } | { kind: 'edit'; expens
 const NARROW_SCREEN_QUERY = '(max-width: 640px)'
 
 export function App() {
+  const { t } = useTranslation()
   // undefined: 読み込み中 / null: 未ログイン
   const [me, setMe] = useState<Me | null | undefined>(undefined)
 
@@ -29,9 +34,12 @@ export function App() {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
     return (
       <main>
-        <h1>No-Spend Tracker</h1>
+        <header>
+          <h1>{t('app.title')}</h1>
+          <LanguageSwitcher />
+        </header>
         <a className="button primary" href={`/auth/google?tz=${encodeURIComponent(tz)}`}>
-          Google でログイン
+          {t('auth.signIn')}
         </a>
       </main>
     )
@@ -41,6 +49,7 @@ export function App() {
 }
 
 function Home({ me }: { me: Me }) {
+  const { t } = useTranslation()
   const [expenses, setExpenses] = useState<Expense[]>([])
   const [dialog, setDialog] = useState<DialogState>(null)
   const isNarrow = useMediaQuery(NARROW_SCREEN_QUERY)
@@ -53,7 +62,7 @@ function Home({ me }: { me: Me }) {
   useEffect(reload, [reload])
 
   async function handleDelete(expense: Expense) {
-    if (!window.confirm(`「${expense.note ?? '内訳なし'}」を削除しますか？`)) return
+    if (!window.confirm(t('expenses.confirmDelete', { note: expense.note ?? t('expenses.noNote') }))) return
     await deleteExpense(expense.id)
     reload()
   }
@@ -76,11 +85,14 @@ function Home({ me }: { me: Me }) {
   return (
     <main>
       <header>
-        <h1>No-Spend Tracker</h1>
-        <form method="post" action="/auth/logout">
-          <span>{me.name ?? me.email}</span>
-          <button>ログアウト</button>
-        </form>
+        <h1>{t('app.title')}</h1>
+        <div className="header-actions">
+          <LanguageSwitcher />
+          <form method="post" action="/auth/logout">
+            <span>{me.name ?? me.email}</span>
+            <button>{t('auth.signOut')}</button>
+          </form>
+        </div>
       </header>
 
       <StreakBanner streak={streak} />
@@ -88,7 +100,7 @@ function Home({ me }: { me: Me }) {
       {isNarrow ? <MonthCalendar {...calendarProps} /> : <YearGrid {...calendarProps} />}
 
       <button className="primary" onClick={() => setDialog({ kind: 'new', date: today })}>
-        今日の支出を入力
+        {t('expenses.addToday')}
       </button>
 
       <ExpenseList
@@ -123,7 +135,10 @@ type ExpenseListProps = {
 
 // 日付ごとにまとめて表示する(expenses は日付の降順で届く)
 function ExpenseList({ expenses, onEdit, onDelete }: ExpenseListProps) {
-  if (expenses.length === 0) return <p>まだ支出の記録はありません。</p>
+  const { t } = useTranslation()
+  const locale = useLocale()
+
+  if (expenses.length === 0) return <p>{t('expenses.empty')}</p>
 
   const byDate = Map.groupBy(expenses, (expense) => expense.date)
 
@@ -131,14 +146,14 @@ function ExpenseList({ expenses, onEdit, onDelete }: ExpenseListProps) {
     <section className="expense-list">
       {[...byDate].map(([date, items]) => (
         <div key={date} className="day">
-          <h2>{date}</h2>
+          <h2>{formatDate(date, locale)}</h2>
           <ul>
             {items.map((expense) => (
               <li key={expense.id}>
-                <span className="note">{expense.note ?? '内訳なし'}</span>
-                <span className="amount">{formatMoney(expense.amount, expense.currency)}</span>
-                <button onClick={() => onEdit(expense)}>編集</button>
-                <button onClick={() => onDelete(expense)}>削除</button>
+                <span className="note">{expense.note ?? t('expenses.noNote')}</span>
+                <span className="amount">{formatMoney(expense.amount, expense.currency, locale)}</span>
+                <button onClick={() => onEdit(expense)}>{t('expenses.edit')}</button>
+                <button onClick={() => onDelete(expense)}>{t('expenses.delete')}</button>
               </li>
             ))}
           </ul>

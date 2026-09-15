@@ -49,6 +49,13 @@ describe('validateExpenseInput', () => {
   })
 
   it('オブジェクト以外を拒否する', () => {
-    expect(validateExpenseInput(null, range).ok).toBe(false)
+    expect(validateExpenseInput(null, range)).toEqual({ ok: false, errors: ['invalid_body'] })
+  })
+
+  it('不正な項目ごとにエラーコードを返す', () => {
+    expect(validateExpenseInput({ date: '2026-08-31', amount: 1.5, note: 1 }, range)).toEqual({
+      ok: false,
+      errors: ['date_before_tracking_start', 'invalid_amount', 'invalid_note'],
+    })
   })
 })

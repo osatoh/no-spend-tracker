@@ -1,11 +1,14 @@
 import { and, desc, eq, gte, lte } from 'drizzle-orm'
 import { Hono } from 'hono'
+import type { ApiErrorCode } from '../../shared/apiErrors'
 import { todayIn } from '../../shared/timezone'
 import { requireUser } from '../auth/session'
 import { createDb } from '../db/client'
 import { expenses } from '../db/schema'
 import type { AppEnv, User } from '../types'
 import { isValidDate, validateExpenseInput } from './validation'
+
+const NOT_FOUND: ApiErrorCode[] = ['not_found']
 
 const expenseColumns = {
   id: expenses.id,
@@ -67,7 +70,7 @@ expenseRoutes.put('/:id', async (c) => {
     .set(result.value)
     .where(and(eq(expenses.id, c.req.param('id')), eq(expenses.userId, user.id)))
     .returning(expenseColumns)
-  if (!expense) return c.json({ errors: ['支出が見つかりません'] }, 404)
+  if (!expense) return c.json({ errors: NOT_FOUND }, 404)
   return c.json({ expense })
 })
 
@@ -77,6 +80,6 @@ expenseRoutes.delete('/:id', async (c) => {
     .delete(expenses)
     .where(and(eq(expenses.id, c.req.param('id')), eq(expenses.userId, user.id)))
     .returning({ id: expenses.id })
-  if (!deleted) return c.json({ errors: ['支出が見つかりません'] }, 404)
+  if (!deleted) return c.json({ errors: NOT_FOUND }, 404)
   return c.body(null, 204)
 })

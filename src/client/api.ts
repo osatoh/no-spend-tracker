@@ -1,3 +1,5 @@
+import type { ApiErrorCode } from '../shared/apiErrors'
+
 export type Me = {
   name: string | null
   email: string
@@ -16,18 +18,18 @@ export type Expense = {
 
 export type ExpenseInput = Pick<Expense, 'date' | 'amount' | 'note'>
 
-// API がバリデーションエラーなどを返したときのエラー
+// API がバリデーションエラーなどを返したときのエラー。文言は表示側でコードから翻訳する
 export class ApiError extends Error {
-  constructor(readonly messages: string[]) {
-    super(messages.join('\n'))
+  constructor(readonly codes: ApiErrorCode[]) {
+    super(codes.join(', '))
   }
 }
 
 async function send(path: string, init?: RequestInit): Promise<Response> {
   const res = await fetch(path, { ...init, headers: { 'Content-Type': 'application/json' } })
   if (!res.ok) {
-    const body = (await res.json().catch(() => null)) as { errors?: string[] } | null
-    throw new ApiError(body?.errors ?? [`通信に失敗しました(${res.status})`])
+    const body = (await res.json().catch(() => null)) as { errors?: ApiErrorCode[] } | null
+    throw new ApiError(body?.errors ?? ['request_failed'])
   }
   return res
 }

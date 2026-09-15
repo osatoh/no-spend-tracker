@@ -1,18 +1,25 @@
-function celebrationMessage(streak: number): string {
-  if (streak === 0) return '明日からまた一緒に積み上げよう'
-  if (streak < 3) return 'いいスタート！'
-  if (streak < 7) return 'その調子！'
-  if (streak < 30) return '1週間以上続いてる、すごい！'
-  return '習慣になってきたね、最高！'
+import { useTranslation } from 'react-i18next'
+
+type MessageKey = 'zero' | 'start' | 'going' | 'week' | 'habit'
+
+function messageKey(streak: number): MessageKey {
+  if (streak === 0) return 'zero'
+  if (streak < 3) return 'start'
+  if (streak < 7) return 'going'
+  if (streak < 30) return 'week'
+  return 'habit'
 }
 
 export function StreakBanner({ streak }: { streak: number }) {
+  const { t } = useTranslation()
+
   return (
     <section className="streak" aria-live="polite">
       <p className="streak-count">
-        <span>{streak}</span>日連続 no-spend
+        <span>{streak}</span>
+        {t('streak.days', { count: streak })}
       </p>
-      <p className="streak-message">{celebrationMessage(streak)}</p>
+      <p className="streak-message">{t(`streak.messages.${messageKey(streak)}`)}</p>
     </section>
   )
 }

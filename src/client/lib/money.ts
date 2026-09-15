@@ -4,7 +4,7 @@ export function fractionDigits(currency: string): number {
 }
 
 // 最小単位の整数を通貨表記にする(例: 350, GBP → £3.50)
-export function formatMoney(amountMinor: number, currency: string, locale = 'ja-JP'): string {
+export function formatMoney(amountMinor: number, currency: string, locale: string): string {
   return new Intl.NumberFormat(locale, { style: 'currency', currency }).format(
     amountMinor / 10 ** fractionDigits(currency),
   )
