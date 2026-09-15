@@ -18,6 +18,8 @@ Positive reinforcement instead of guilt, inspired by the No-Spend Challenge cult
 - **Streak**: counts consecutive no-spend days, including today, with a celebration message
 - **Spending log**: add, edit and delete entries (date, note, amount) from a modal; multiple entries per day. Clicking a day on the calendar opens the modal for that date
 - **English / Japanese**: switch languages in the app; dates, month and weekday labels, and amounts follow the selected language
+- **Settings**: change the timezone and currency (JPY / GBP), sign out, or delete your account
+- **Installable (PWA)**: add it to your home screen and launch it like an app
 - **Sign in with Google**
 
 ## Architecture
@@ -59,7 +61,8 @@ A single Worker serves both the SPA and the API, so they share one origin: the s
 - The timezone (IANA name) is a user setting and decides where each day starts and ends. At sign-up it is taken from the browser (`Intl`), so there is no onboarding screen
 - Expenses are stored one per entry, so you can see what the money went on
 - Amounts are integers in the currency's minor unit (JPY: yen, GBP: pence) to avoid floating-point errors
-- The currency is a user setting, and each expense also stores its own currency, so changing the setting never reinterprets past records. JPY only for now
+- The currency (JPY or GBP) is a user setting, and each expense also stores its own currency, so changing the setting never reinterprets past records. Amounts in different currencies are never added together; a day's total is shown per currency (e.g. "¥500 + £3.50"). The grass and streak only depend on whether a day has any expense, so mixed currencies do not affect them
+- The timezone can be changed in settings, but the tracking start date stays fixed
 
 **Security**
 - Every query on user data is scoped by the signed-in user's id
@@ -112,9 +115,9 @@ npx wrangler secret put GOOGLE_CLIENT_SECRET
 - [x] [Privacy policy](PRIVACY.md)
 - [x] Account deletion
 - [x] Settings screen (language, sign out, account deletion)
-- [ ] Timezone and currency settings
-- [ ] PWA support (daily logging on mobile)
-- [ ] Multi-currency support with conversion (JPY / GBP)
+- [x] Timezone and currency settings
+- [x] PWA support (installable; no offline mode)
+- [ ] Currency conversion (JPY / GBP)
 - [ ] Monthly challenge mode (e.g. No Spend November)
 - [ ] Stats: no-spend rate per month, total saved estimate
 - [ ] AI-generated praise messages
