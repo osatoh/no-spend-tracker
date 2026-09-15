@@ -4,7 +4,7 @@ import { deleteCookie, getCookie, setCookie } from 'hono/cookie'
 import { HTTPException } from 'hono/http-exception'
 import { createDb, type Db } from '../db/client'
 import { users } from '../db/schema'
-import { normalizeTimezone, todayIn } from '../lib/timezone'
+import { normalizeTimezone, todayIn } from '../../shared/timezone'
 import type { AppEnv, User } from '../types'
 import { SESSION_COOKIE, createSession, deleteSession } from './session'
 
