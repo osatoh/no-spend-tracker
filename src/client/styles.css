@@ -5,6 +5,13 @@
   --accent: #2da44e;
   --border: #d0d7de;
   --danger: #cf222e;
+  --cell-outside: #ebedf0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --cell-outside: #2d333b;
+  }
 }
 
 body {
@@ -47,6 +54,151 @@ button,
 .primary {
   border-color: var(--accent);
   background: var(--accent);
+  color: #fff;
+}
+
+main > .primary {
+  margin-top: 1rem;
+}
+
+.streak {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.streak p {
+  margin: 0;
+}
+
+.streak-count span {
+  margin-right: 0.25rem;
+  color: var(--accent);
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.streak-message {
+  opacity: 0.8;
+}
+
+/* 草・カレンダーのマス。no-spend の日だけ草を生やし、支出日は範囲外と同じく何も生やさない */
+.day-cell {
+  padding: 0;
+  border: none;
+  border-radius: 3px;
+  background: var(--cell-outside);
+}
+
+.day-cell:disabled {
+  cursor: default;
+}
+
+.day-cell.no-spend {
+  background: var(--accent);
+}
+
+/* 横スクロールせず1年分が収まるよう、マスの大きさを横幅に合わせて伸縮させる */
+.year-grid {
+  display: grid;
+  grid-template-columns: auto repeat(53, minmax(0, 1fr));
+  gap: 3px;
+}
+
+.day-cell.today {
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
+}
+
+.year-grid .week,
+.year-grid .weekday-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.year-grid .month-label,
+.year-grid .weekday-label {
+  font-size: 10px;
+  white-space: nowrap;
+  opacity: 0.7;
+}
+
+/* 月ラベルは列幅より長いので、右隣の列にはみ出して表示する */
+.year-grid .month-label {
+  height: 14px;
+  line-height: 14px;
+}
+
+/* 曜日ラベルはマスと同じ高さの行に揃える */
+.year-grid .weekday-label {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  padding-right: 4px;
+}
+
+.year-grid .day-cell {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 2px;
+}
+
+/* 月の境目。マスの間の隙間(3px)の中央に線を引き、左辺と上辺をつなげて階段状にする */
+.year-grid .day-cell.boundary-left::before,
+.year-grid .day-cell.boundary-top::after {
+  position: absolute;
+  background: currentColor;
+  opacity: 0.18;
+  content: '';
+  pointer-events: none;
+}
+
+.year-grid .day-cell.boundary-left::before {
+  top: -2px;
+  bottom: -2px;
+  left: -2px;
+  width: 1px;
+}
+
+.year-grid .day-cell.boundary-top::after {
+  top: -2px;
+  right: -2px;
+  left: -2px;
+  height: 1px;
+}
+
+.month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.month-nav h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-top: 0.5rem;
+}
+
+.month-grid .weekday {
+  font-size: 0.8rem;
+  text-align: center;
+  opacity: 0.7;
+}
+
+.month-grid .day-cell {
+  aspect-ratio: 1;
+  font-size: 0.8rem;
+  color: inherit;
+}
+
+.month-grid .day-cell.no-spend {
   color: #fff;
 }
 

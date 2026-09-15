@@ -7,6 +7,8 @@ const MAX_NOTE_LENGTH = 100
 type Props = {
   // null なら新規登録、Expense なら編集
   expense: Expense | null
+  // 新規登録時の日付の初期値
+  defaultDate: string
   today: string
   minDate: string
   currency: string
@@ -15,9 +17,9 @@ type Props = {
 }
 
 // 支出の登録・編集モーダル。表示中だけマウントする
-export function ExpenseDialog({ expense, today, minDate, currency, onClose, onSaved }: Props) {
+export function ExpenseDialog({ expense, defaultDate, today, minDate, currency, onClose, onSaved }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null)
-  const [date, setDate] = useState(expense?.date ?? today)
+  const [date, setDate] = useState(expense?.date ?? defaultDate)
   const [note, setNote] = useState(expense?.note ?? '')
   const [amount, setAmount] = useState(expense ? toMajorUnits(expense.amount, expense.currency) : '')
   const [errors, setErrors] = useState<string[]>([])
