@@ -13,8 +13,7 @@
     {
       "binding": "DB",
       "database_name": "no-spend-tracker",
-      // 本番用 DB は `npx wrangler d1 create no-spend-tracker` で作成し、出力された id を入れる
-      "database_id": "",
+      "database_id": "64c98f81-f221-4a77-af4a-a470daf1286b",
       "migrations_dir": "drizzle"
     }
   ],
