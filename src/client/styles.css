@@ -1,0 +1,116 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+  --accent: #2da44e;
+  --border: #d0d7de;
+  --danger: #cf222e;
+}
+
+body {
+  margin: 0;
+}
+
+main {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+header form {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+button,
+.button {
+  display: inline-block;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.expense-list .day h2 {
+  margin: 1.25rem 0 0.25rem;
+  font-size: 0.95rem;
+}
+
+.expense-list ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.expense-list li {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.expense-list .note {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.expense-dialog {
+  width: min(24rem, calc(100vw - 2rem));
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.expense-dialog form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.expense-dialog h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.expense-dialog label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.expense-dialog input {
+  padding: 0.4rem;
+  font: inherit;
+}
+
+.expense-dialog .errors {
+  margin: 0;
+  padding-left: 1.2rem;
+  color: var(--danger);
+}
+
+.expense-dialog .actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
