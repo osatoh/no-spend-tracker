@@ -1,5 +1,7 @@
 # No-Spend Tracker
 
+[![CI](https://github.com/osatoh/no-spend-tracker/actions/workflows/ci.yml/badge.svg)](https://github.com/osatoh/no-spend-tracker/actions/workflows/ci.yml)
+
 A no-spend challenge tracker that celebrates the days you **don't** spend money.
 Positive reinforcement instead of guilt, inspired by the No-Spend Challenge culture.
 
@@ -123,6 +125,7 @@ npx wrangler secret put GOOGLE_CLIENT_SECRET
 - [x] PWA support (installable; no offline mode)
 - [x] Currency conversion for stats (JPY / GBP)
 - [x] Stats: no-spend rate per month, total saved estimate
+- [ ] AI-generated praise messages (streak celebration messages are currently fixed per streak length)
 
 ## Privacy
 See the [Privacy Policy](PRIVACY.md). Questions and deletion requests can be sent via [GitHub Issues](https://github.com/osatoh/no-spend-tracker/issues).
