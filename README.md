@@ -32,6 +32,7 @@ Positive reinforcement instead of guilt — inspired by the No-Spend Challenge c
 ## Design Decisions
 - Reward-based UX (praise no-spend days) instead of guilt-based tracking
 - No-spend is the default: only expenses are stored. Every day from sign-up to today without an expense counts as a no-spend day
+- The calendar grows grass only on no-spend days; spend days get no grass (no reward) and no intensity shading
 - Tracking starts on the sign-up date, fixed in the user's timezone at sign-up (changing the timezone later does not move it)
 - Timezone (IANA name) is a user setting and decides where each day starts and ends. At sign-up it is taken from the browser (`Intl.DateTimeFormat().resolvedOptions().timeZone`) with no onboarding screen; it can be changed later in settings
 - Expenses are stored one per entry (to see what the spending was on)
