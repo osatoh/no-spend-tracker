@@ -5,9 +5,10 @@ Positive reinforcement instead of guilt, inspired by the No-Spend Challenge cult
 
 **Live demo:** https://no-spend-tracker.no-spend-tracker.workers.dev (sign in with any Google account)
 
-| Desktop | Mobile |
-| --- | --- |
-| <img src="docs/screenshots/desktop.png" alt="Desktop: a year of no-spend grass with the streak counter" width="600"> | <img src="docs/screenshots/mobile.png" alt="Mobile: monthly calendar view" width="240"> |
+| | Desktop | Mobile |
+| --- | --- | --- |
+| Home | <img src="docs/screenshots/desktop.png" alt="Desktop home: a year of no-spend grass, the streak counter and stats" width="560"> | <img src="docs/screenshots/mobile.png" alt="Mobile home: monthly calendar and stats" width="220"> |
+| Settings | <img src="docs/screenshots/settings-desktop.png" alt="Desktop settings: language, timezone, currency, daily budget and account" width="560"> | <img src="docs/screenshots/settings-mobile.png" alt="Mobile settings" width="220"> |
 
 ## Why
 - Most budgeting apps make you feel bad about spending
