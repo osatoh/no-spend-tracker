@@ -24,7 +24,8 @@ Positive reinforcement instead of guilt — inspired by the No-Spend Challenge c
 - [ ] PWA support (daily logging on mobile)
 
 ## Tech Stack
-- Hono + TypeScript on Cloudflare Workers
+- Frontend: React SPA built with Vite
+- API: Hono + TypeScript on Cloudflare Workers (the same Worker serves the SPA via Static Assets)
 - Cloudflare D1 (SQLite) + Drizzle ORM
 - Auth: Google OAuth (`@hono/oauth-providers`) + self-managed sessions stored in D1
 
@@ -42,7 +43,7 @@ Positive reinforcement instead of guilt — inspired by the No-Spend Challenge c
 ```sh
 npm install
 cp .dev.vars.example .dev.vars # fill in the Google OAuth client ID / secret
-npm run db:generate      # generate migration SQL from src/db/schema.ts
+npm run db:generate      # generate migration SQL from src/worker/db/schema.ts
 npm run db:migrate:local # apply migrations to the local D1
 npm run dev
 ```
