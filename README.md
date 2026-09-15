@@ -110,8 +110,9 @@ npx wrangler secret put GOOGLE_CLIENT_SECRET
 ## Roadmap
 - [x] Rate limiting on expense writes (per user)
 - [x] [Privacy policy](PRIVACY.md)
-- [ ] Account deletion
-- [ ] Settings screen (timezone and currency)
+- [x] Account deletion
+- [x] Settings screen (language, sign out, account deletion)
+- [ ] Timezone and currency settings
 - [ ] PWA support (daily logging on mobile)
 - [ ] Multi-currency support with conversion (JPY / GBP)
 - [ ] Monthly challenge mode (e.g. No Spend November)

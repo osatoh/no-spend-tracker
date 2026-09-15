@@ -9,7 +9,7 @@ Last updated: 2026-09-16
 This policy explains how No-Spend Tracker ("the app", https://no-spend-tracker.no-spend-tracker.workers.dev) handles your information. The app is a personal open-source project.
 
 ### Information we collect
-- **Google account information**: when you sign in with Google, we receive your Google account ID, email address and name
+- **Google account information**: when you sign in with Google, we receive your Google account ID, email address, name and profile picture URL (the picture is shown as your avatar)
 - **Settings**: your timezone (taken from your browser at sign-up) and currency
 - **Spending records**: the date, amount and note of each entry you log
 
@@ -35,7 +35,9 @@ These providers process data on our behalf under their own privacy policies:
 [Cloudflare](https://www.cloudflare.com/privacypolicy/) / [Google](https://policies.google.com/privacy)
 
 ### Retention and deletion
-Your data is kept for as long as your account exists. An in-app account deletion feature is planned; until it is available, you can request deletion via the contact below, and your account and all spending records will be deleted.
+This policy is linked from the sign-in screen and from Settings in the app.
+
+Your data is kept for as long as your account exists. You can delete your account at any time from **Settings → Delete account**, which immediately deletes your account and all spending records. If you cannot sign in, you can also request deletion via the contact below.
 
 ### Security
 Sign-in sessions are stored only as hashed tokens, every data access is scoped to the signed-in user, and all traffic is encrypted with HTTPS.
@@ -53,7 +55,7 @@ Please open an issue at https://github.com/osatoh/no-spend-tracker/issues. Do no
 本ポリシーは、No-Spend Tracker (以下「本アプリ」、https://no-spend-tracker.no-spend-tracker.workers.dev) における利用者情報の取り扱いを説明するものです。本アプリは個人が運営するオープンソースのプロジェクトです。
 
 ### 取得する情報
-- **Google アカウントの情報**: Google でログインした際に、Google アカウントの ID、メールアドレス、名前を受け取ります
+- **Google アカウントの情報**: Google でログインした際に、Google アカウントの ID、メールアドレス、名前、プロフィール画像の URL を受け取ります (画像はアイコンとして表示します)
 - **設定**: タイムゾーン (サインアップ時にブラウザから取得) と通貨
 - **支出の記録**: 登録された各支出の日付、金額、内訳
 
@@ -79,7 +81,9 @@ Please open an issue at https://github.com/osatoh/no-spend-tracker/issues. Do no
 [Cloudflare](https://www.cloudflare.com/privacypolicy/) / [Google](https://policies.google.com/privacy)
 
 ### 保存期間と削除
-情報はアカウントが存在する間保存します。アプリ内での退会機能は今後追加する予定です。それまでの間は、下記の問い合わせ先から削除を依頼いただければ、アカウントとすべての支出の記録を削除します。
+本ポリシーへのリンクは、アプリのログイン画面と設定画面にあります。
+
+情報はアカウントが存在する間保存します。**設定 → アカウントを削除** からいつでも退会でき、アカウントとすべての支出の記録が直ちに削除されます。ログインできない場合は、下記の問い合わせ先から削除を依頼することもできます。
 
 ### 安全管理
 ログインセッションはハッシュ化したトークンとしてのみ保存し、データへのアクセスは常にログイン中の利用者本人の分に限定し、通信はすべて HTTPS で暗号化しています。
