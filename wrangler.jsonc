@@ -5,6 +5,14 @@
   "compatibility_date": "2026-09-15",
   // D1(APAC)から遠い地域のリクエストでも DB への往復を減らせるよう、Worker の実行場所を自動で最適化する
   "placement": { "mode": "smart" },
+  "ratelimits": [
+    {
+      // 支出の登録・更新・削除をユーザーごとに制限し、D1 の書き込み枠を守る
+      "name": "EXPENSE_WRITE_LIMITER",
+      "namespace_id": "1001",
+      "simple": { "limit": 30, "period": 60 }
+    }
+  ],
   "assets": {
     // 未知のパスは index.html を返し、React 側でルーティングする
     "not_found_handling": "single-page-application",

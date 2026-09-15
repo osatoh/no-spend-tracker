@@ -56,6 +56,7 @@ export const en = {
     invalid_note: 'The note is invalid.',
     note_too_long: 'The note must be {{max}} characters or fewer.',
     not_found: 'That spending entry could not be found.',
+    rate_limited: 'Too many changes in a short time. Please wait a minute and try again.',
     request_failed: 'Something went wrong. Please try again.',
   } satisfies Record<ApiErrorCode, string>,
 }

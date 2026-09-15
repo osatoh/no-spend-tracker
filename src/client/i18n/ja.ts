@@ -56,6 +56,7 @@ export const ja = {
     invalid_note: '内訳が不正です',
     note_too_long: '内訳は{{max}}文字以内で入力してください',
     not_found: '支出が見つかりません',
+    rate_limited: '短時間に操作が集中しています。1分ほど待ってからもう一度お試しください',
     request_failed: '通信に失敗しました。もう一度お試しください',
   },
 } satisfies typeof en

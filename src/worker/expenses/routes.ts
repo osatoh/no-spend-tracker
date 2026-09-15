@@ -6,6 +6,7 @@ import { requireUser } from '../auth/session'
 import { createDb } from '../db/client'
 import { expenses } from '../db/schema'
 import type { AppEnv, User } from '../types'
+import { limitExpenseWrites } from './rateLimit'
 import { isValidDate, validateExpenseInput } from './validation'
 
 const NOT_FOUND: ApiErrorCode[] = ['not_found']
@@ -47,7 +48,7 @@ expenseRoutes.get('/', async (c) => {
   return c.json({ expenses: rows })
 })
 
-expenseRoutes.post('/', async (c) => {
+expenseRoutes.post('/', limitExpenseWrites, async (c) => {
   const user = requireUser(c)
   const result = validateExpenseInput(await readJson(c.req.raw), dateRangeFor(user))
   if (!result.ok) return c.json({ errors: result.errors }, 400)
@@ -60,7 +61,7 @@ expenseRoutes.post('/', async (c) => {
 })
 
 // 通貨は登録時のものを維持し、日付・金額・内訳だけ更新する
-expenseRoutes.put('/:id', async (c) => {
+expenseRoutes.put('/:id', limitExpenseWrites, async (c) => {
   const user = requireUser(c)
   const result = validateExpenseInput(await readJson(c.req.raw), dateRangeFor(user))
   if (!result.ok) return c.json({ errors: result.errors }, 400)
@@ -74,7 +75,7 @@ expenseRoutes.put('/:id', async (c) => {
   return c.json({ expense })
 })
 
-expenseRoutes.delete('/:id', async (c) => {
+expenseRoutes.delete('/:id', limitExpenseWrites, async (c) => {
   const user = requireUser(c)
   const [deleted] = await createDb(c.env)
     .delete(expenses)

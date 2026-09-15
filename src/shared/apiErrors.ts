@@ -8,4 +8,5 @@ export type ApiErrorCode =
   | 'invalid_note'
   | 'note_too_long'
   | 'not_found'
+  | 'rate_limited'
   | 'request_failed'

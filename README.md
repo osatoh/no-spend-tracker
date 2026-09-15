@@ -63,6 +63,7 @@ A single Worker serves both the SPA and the API, so they share one origin: the s
 
 **Security**
 - Every query on user data is scoped by the signed-in user's id
+- Expense writes (create, update, delete) are rate limited per user with the Workers Rate Limiting binding (30 per minute), protecting the D1 write quota; reads are not limited
 - Session tokens are random 256-bit values; only their SHA-256 hash is stored, so a database leak does not expose usable sessions
 - Session cookies are `HttpOnly`, `Secure` and `SameSite=Lax`, and state-changing form requests have their `Origin` checked
 - The OAuth `state` parameter is verified, and the timezone passed through the login flow is validated before use
@@ -107,7 +108,7 @@ npx wrangler secret put GOOGLE_CLIENT_SECRET
 ```
 
 ## Roadmap
-- [ ] Rate limiting on the API
+- [x] Rate limiting on expense writes (per user)
 - [ ] Privacy policy
 - [ ] Account deletion
 - [ ] Settings screen (timezone and currency)
