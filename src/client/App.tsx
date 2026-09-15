@@ -6,6 +6,7 @@ import { deleteExpense, fetchExpenses, fetchMe, type Expense, type Me } from './
 import { MonthCalendar } from './calendar/MonthCalendar'
 import { YearGrid } from './calendar/YearGrid'
 import { ExpenseDialog } from './ExpenseDialog'
+import { Footer } from './Footer'
 import { useLocale } from './i18n/useLocale'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { StreakBanner } from './StreakBanner'
@@ -41,6 +42,7 @@ export function App() {
         <a className="button primary" href={`/auth/google?tz=${encodeURIComponent(tz)}`}>
           {t('auth.signIn')}
         </a>
+        <Footer />
       </main>
     )
   }
@@ -123,6 +125,8 @@ function Home({ me }: { me: Me }) {
           }}
         />
       )}
+
+      <Footer />
     </main>
   )
 }

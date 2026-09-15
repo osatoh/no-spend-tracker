@@ -11,6 +11,10 @@ export const ja = {
   language: {
     label: '言語',
   },
+  footer: {
+    privacy: 'プライバシーポリシー',
+    source: 'ソースコード',
+  },
   streak: {
     // 日本語に複数形はないが、キーの形を en に揃える
     days_one: '日連続 no-spend',

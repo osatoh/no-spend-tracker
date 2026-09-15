@@ -109,7 +109,7 @@ npx wrangler secret put GOOGLE_CLIENT_SECRET
 
 ## Roadmap
 - [x] Rate limiting on expense writes (per user)
-- [ ] Privacy policy
+- [x] [Privacy policy](PRIVACY.md)
 - [ ] Account deletion
 - [ ] Settings screen (timezone and currency)
 - [ ] PWA support (daily logging on mobile)
@@ -117,6 +117,9 @@ npx wrangler secret put GOOGLE_CLIENT_SECRET
 - [ ] Monthly challenge mode (e.g. No Spend November)
 - [ ] Stats: no-spend rate per month, total saved estimate
 - [ ] AI-generated praise messages
+
+## Privacy
+See the [Privacy Policy](PRIVACY.md). Questions and deletion requests can be sent via [GitHub Issues](https://github.com/osatoh/no-spend-tracker/issues).
 
 ## License
 [MIT](LICENSE)

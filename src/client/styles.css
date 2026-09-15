@@ -68,6 +68,19 @@ main > .primary {
   margin-top: 1rem;
 }
 
+footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+footer a {
+  color: inherit;
+}
+
 .streak {
   margin: 1rem 0;
   text-align: center;

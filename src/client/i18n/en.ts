@@ -12,6 +12,10 @@ export const en = {
   language: {
     label: 'Language',
   },
+  footer: {
+    privacy: 'Privacy Policy',
+    source: 'Source code',
+  },
   streak: {
     days_one: 'day no-spend streak',
     days_other: 'days no-spend streak',
