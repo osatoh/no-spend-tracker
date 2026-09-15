@@ -118,9 +118,7 @@ npx wrangler secret put GOOGLE_CLIENT_SECRET
 - [x] Timezone and currency settings
 - [x] PWA support (installable; no offline mode)
 - [ ] Currency conversion (JPY / GBP)
-- [ ] Monthly challenge mode (e.g. No Spend November)
 - [ ] Stats: no-spend rate per month, total saved estimate
-- [ ] AI-generated praise messages
 
 ## Privacy
 See the [Privacy Policy](PRIVACY.md). Questions and deletion requests can be sent via [GitHub Issues](https://github.com/osatoh/no-spend-tracker/issues).
