@@ -25,9 +25,19 @@ const NARROW_SCREEN_QUERY = '(max-width: 640px)'
 export function App() {
   // undefined: 読み込み中 / null: 未ログイン
   const [me, setMe] = useState<Me | null | undefined>(undefined)
+  const [expenses, setExpenses] = useState<Expense[]>([])
 
+  // ユーザーと支出を並列に取得し、DB から遠い地域でも待ち時間が直列に積み重ならないようにする。
+  // 未ログインなら支出の取得は 401 になるので空として扱う
   useEffect(() => {
-    fetchMe().then(setMe)
+    Promise.all([fetchMe(), fetchExpenses().catch(() => [])]).then(([user, loaded]) => {
+      setExpenses(loaded)
+      setMe(user)
+    })
+  }, [])
+
+  const reloadExpenses = useCallback(() => {
+    fetchExpenses().then(setExpenses)
   }, [])
 
   if (me === undefined) return null
@@ -37,7 +47,7 @@ export function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<Layout me={me} />}>
-          <Route index element={<Home me={me} />} />
+          <Route index element={<Home me={me} expenses={expenses} onExpensesChange={reloadExpenses} />} />
           <Route path="settings" element={<Settings me={me} onMeChange={setMe} />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
@@ -86,23 +96,23 @@ function Layout({ me }: { me: Me }) {
   )
 }
 
-function Home({ me }: { me: Me }) {
+type HomeProps = {
+  me: Me
+  expenses: Expense[]
+  // 支出を登録・編集・削除したあとに一覧を取り直す
+  onExpensesChange: () => void
+}
+
+function Home({ me, expenses, onExpensesChange }: HomeProps) {
   const { t } = useTranslation()
-  const [expenses, setExpenses] = useState<Expense[]>([])
   const [dialog, setDialog] = useState<DialogState>(null)
   const isNarrow = useMediaQuery(NARROW_SCREEN_QUERY)
   const today = todayIn(me.timezone)
 
-  const reload = useCallback(() => {
-    fetchExpenses().then(setExpenses)
-  }, [])
-
-  useEffect(reload, [reload])
-
   async function handleDelete(expense: Expense) {
     if (!window.confirm(t('expenses.confirmDelete', { note: expense.note ?? t('expenses.noNote') }))) return
     await deleteExpense(expense.id)
-    reload()
+    onExpensesChange()
   }
 
   // 草と streak は「その日に支出があるか」だけで決まるので、通貨が混ざっても影響しない
@@ -142,7 +152,7 @@ function Home({ me }: { me: Me }) {
           onClose={() => setDialog(null)}
           onSaved={() => {
             setDialog(null)
-            reload()
+            onExpensesChange()
           }}
         />
       )}
