@@ -7,7 +7,7 @@ Positive reinforcement instead of guilt, inspired by the No-Spend Challenge cult
 
 | | Desktop | Mobile |
 | --- | --- | --- |
-| Home | <img src="docs/screenshots/desktop.png" alt="Desktop home: a year of no-spend grass, the streak counter and stats" width="560"> | <img src="docs/screenshots/mobile.png" alt="Mobile home: monthly calendar and stats" width="220"> |
+| Home | <img src="docs/screenshots/home-desktop.png" alt="Desktop home: a year of no-spend grass, the streak counter and stats" width="560"> | <img src="docs/screenshots/home-mobile.png" alt="Mobile home: monthly calendar and stats" width="220"> |
 | Settings | <img src="docs/screenshots/settings-desktop.png" alt="Desktop settings: language, timezone, currency, daily budget and account" width="560"> | <img src="docs/screenshots/settings-mobile.png" alt="Mobile settings" width="220"> |
 
 ## Why
