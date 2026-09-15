@@ -18,7 +18,8 @@ Positive reinforcement instead of guilt, inspired by the No-Spend Challenge cult
 - **Streak**: counts consecutive no-spend days, including today, with a celebration message
 - **Spending log**: add, edit and delete entries (date, note, amount) from a modal; multiple entries per day. Clicking a day on the calendar opens the modal for that date
 - **English / Japanese**: switch languages in the app; dates, month and weekday labels, and amounts follow the selected language
-- **Settings**: change the timezone and currency (JPY / GBP), sign out, or delete your account
+- **Stats**: no-spend rate and estimated savings for this month, each past month and all time
+- **Settings**: change the timezone, currency (JPY / GBP) and daily budget, sign out, or delete your account
 - **Installable (PWA)**: add it to your home screen and launch it like an app
 - **Sign in with Google**
 
@@ -63,6 +64,8 @@ A single Worker serves both the SPA and the API, so they share one origin: the s
 - Amounts are integers in the currency's minor unit (JPY: yen, GBP: pence) to avoid floating-point errors
 - The currency (JPY or GBP) is a user setting, and each expense also stores its own currency, so changing the setting never reinterprets past records. Amounts in different currencies are never added together; a day's total is shown per currency (e.g. "¥500 + £3.50"). The grass and streak only depend on whether a day has any expense, so mixed currencies do not affect them
 - The timezone can be changed in settings, but the tracking start date stays fixed
+- Savings are estimated from a daily budget the user sets: each tracked day adds "budget − that day's spending", so no-spend days add the whole budget, cheaper days add the difference, and days over budget subtract the excess. The budget is stored in the display currency and cleared when the currency changes
+- For stats, spending in other currencies is converted to the display currency with today's exchange rate from [Frankfurter](https://frankfurter.dev/). The Worker fetches and caches the rates (Cache API), so users' browsers never contact the rate service directly
 
 **Security**
 - Every query on user data is scoped by the signed-in user's id
@@ -117,8 +120,8 @@ npx wrangler secret put GOOGLE_CLIENT_SECRET
 - [x] Settings screen (language, sign out, account deletion)
 - [x] Timezone and currency settings
 - [x] PWA support (installable; no offline mode)
-- [ ] Currency conversion (JPY / GBP)
-- [ ] Stats: no-spend rate per month, total saved estimate
+- [x] Currency conversion for stats (JPY / GBP)
+- [x] Stats: no-spend rate per month, total saved estimate
 
 ## Privacy
 See the [Privacy Policy](PRIVACY.md). Questions and deletion requests can be sent via [GitHub Issues](https://github.com/osatoh/no-spend-tracker/issues).
