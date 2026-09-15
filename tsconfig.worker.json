@@ -1,0 +1,14 @@
+{
+  // Cloudflare Workers で動く API 用。DOM の型と混ざらないよう分ける
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "lib": ["ESNext"],
+    "types": []
+  },
+  "include": ["src/worker", "worker-configuration.d.ts"]
+}
