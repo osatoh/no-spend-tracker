@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import type { ExchangeRates } from '../shared/currency'
@@ -6,6 +6,7 @@ import { computeStats, noSpendRate, type PeriodStats } from '../shared/stats'
 import { fetchRates, type Expense, type Me } from './api'
 import { useLocale } from './i18n/useLocale'
 import { formatMonthTitle } from './lib/dateFormat'
+import { numberFormat } from './lib/intlCache'
 import { formatMoney } from './lib/money'
 
 type Props = {
@@ -37,19 +38,23 @@ export function StatsPanel({ me, expenses, today }: Props) {
   const locale = useLocale()
   const needsRates = expenses.some((expense) => expense.currency !== me.currency)
   const rates = useExchangeRates(me.currency, needsRates)
-  // レートの取得中は、換算が必要な節約額だけ表示を保留する
-  const ratesPending = needsRates && rates === null
 
-  const stats = computeStats({
-    expenses,
-    trackingStartDate: me.trackingStartDate,
-    today,
-    dailyBudget: me.dailyBudget,
-    currency: me.currency,
-    rates: rates === 'error' ? null : rates,
-  })
+  // 記録開始日から今日まで1日ずつ集計するので、入力が変わったときだけ計算し直す。
+  // 目安額が未設定のときや、レートの取得中・取得失敗で換算できないときは saved が null になる
+  const stats = useMemo(
+    () =>
+      computeStats({
+        expenses,
+        trackingStartDate: me.trackingStartDate,
+        today,
+        dailyBudget: me.dailyBudget,
+        currency: me.currency,
+        rates: rates === 'error' ? null : rates,
+      }),
+    [expenses, me.trackingStartDate, today, me.dailyBudget, me.currency, rates],
+  )
   const [thisMonth, ...previousMonths] = stats.months
-  const percent = new Intl.NumberFormat(locale, { style: 'percent', maximumFractionDigits: 0 })
+  const percent = numberFormat(locale, { style: 'percent', maximumFractionDigits: 0 })
 
   function rateText(period: PeriodStats) {
     const rate = noSpendRate(period)
@@ -57,8 +62,7 @@ export function StatsPanel({ me, expenses, today }: Props) {
   }
 
   function savedText(period: PeriodStats) {
-    if (me.dailyBudget === null || ratesPending || period.saved === null) return '-'
-    return formatMoney(period.saved, me.currency, locale)
+    return period.saved === null ? '-' : formatMoney(period.saved, me.currency, locale)
   }
 
   return (

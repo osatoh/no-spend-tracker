@@ -1,20 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { MAX_AMOUNT, MAX_NOTE_LENGTH, isValidDate, validateExpenseInput } from './validation'
+import { MAX_AMOUNT, MAX_NOTE_LENGTH } from '../../shared/limits'
+import { validateExpenseInput } from './validation'
 
 const range = { minDate: '2026-09-01', maxDate: '2026-09-16' }
-
-describe('isValidDate', () => {
-  it('実在する日付を受け付ける', () => {
-    expect(isValidDate('2026-09-16')).toBe(true)
-    expect(isValidDate('2028-02-29')).toBe(true)
-  })
-
-  it('存在しない日付や形式違いを拒否する', () => {
-    expect(isValidDate('2026-02-30')).toBe(false)
-    expect(isValidDate('2026-9-16')).toBe(false)
-    expect(isValidDate('')).toBe(false)
-  })
-})
 
 describe('validateExpenseInput', () => {
   it('正しい入力を受け付け、内訳の前後の空白を除く', () => {

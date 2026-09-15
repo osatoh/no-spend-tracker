@@ -1,12 +1,17 @@
 // 日付はすべて YYYY-MM-DD の文字列で扱い、タイムゾーンの影響を受けないよう UTC で計算する
 
-function toUtc(date: string): Date {
+export function toUtc(date: string): Date {
   const [year, month, day] = date.split('-').map(Number)
   return new Date(Date.UTC(year, month - 1, day))
 }
 
 function fromUtc(date: Date): string {
   return date.toISOString().slice(0, 10)
+}
+
+// 実在する YYYY-MM-DD かどうか。2026-02-30 のような日付は Date が繰り上げるので、往復して一致するかで判定する
+export function isValidDate(value: string): boolean {
+  return /^\d{4}-\d{2}-\d{2}$/.test(value) && fromUtc(toUtc(value)) === value
 }
 
 export function addDays(date: string, days: number): string {
@@ -38,7 +43,7 @@ export type DayCell = {
   date: string
   status: DayStatus
   // その日の支出合計。通貨が違う金額は足し合わせない
-  totals: CurrencyTotal[]
+  totals: readonly CurrencyTotal[]
 }
 
 // 支出を日付ごと・通貨ごとに合計する。通貨の並びは最初に現れた順
@@ -67,7 +72,7 @@ export function buildDayCell(
   if (date < range.trackingStartDate || date > range.today) {
     return { date, status: 'outside', totals: [] }
   }
-  const totals = [...(dailyTotals.get(date) ?? [])]
+  const totals = dailyTotals.get(date) ?? []
   return { date, status: totals.length === 0 ? 'no-spend' : 'spend', totals }
 }
 

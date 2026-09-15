@@ -48,12 +48,12 @@ export function computeStats({ expenses, trackingStartDate, today, dailyBudget, 
     const month = date.slice(0, 7)
     const stats = byMonth.get(month) ?? { month, trackedDays: 0, noSpendDays: 0, saved: canSave ? 0 : null }
     const spent = spentByDate.get(date)
-    const saved = canSave ? dailyBudget - (spent ?? 0) : null
 
     for (const period of [stats, total]) {
       period.trackedDays++
       if (spent === undefined) period.noSpendDays++
-      if (saved !== null && period.saved !== null) period.saved += saved
+      // canSave のときだけ saved を数値で初期化しているので、ここでは null にならない
+      if (canSave && period.saved !== null) period.saved += dailyBudget - (spent ?? 0)
     }
     byMonth.set(month, stats)
   }

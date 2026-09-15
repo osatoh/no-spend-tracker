@@ -11,6 +11,9 @@ import { SESSION_COOKIE, createSession, deleteSession } from './session'
 // サインアップ時のタイムゾーンを Google へのリダイレクト中だけ保持する Cookie
 const SIGNUP_TZ_COOKIE = 'signup_tz'
 
+// JavaScript から読めず、HTTPS のみで送られ、他サイトからの POST には付かない Cookie の共通設定
+const SECURE_COOKIE_OPTIONS = { httpOnly: true, secure: true, sameSite: 'Lax' } as const
+
 export const authRoutes = new Hono<AppEnv>()
 
 authRoutes.get(
@@ -21,9 +24,7 @@ authRoutes.get(
     // ログイン開始時(code なし)にブラウザから渡されたタイムゾーンを退避する
     if (!c.req.query('code')) {
       setCookie(c, SIGNUP_TZ_COOKIE, normalizeTimezone(c.req.query('tz')), {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'Lax',
+        ...SECURE_COOKIE_OPTIONS,
         path: '/auth',
         maxAge: 600,
       })
@@ -55,9 +56,7 @@ authRoutes.get(
     })
     const { token, expiresAt } = await createSession(db, user.id)
     setCookie(c, SESSION_COOKIE, token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'Lax',
+      ...SECURE_COOKIE_OPTIONS,
       path: '/',
       expires: expiresAt,
     })

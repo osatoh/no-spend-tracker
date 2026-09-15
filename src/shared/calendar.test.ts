@@ -5,6 +5,7 @@ import {
   buildDayCell,
   computeStreak,
   dayOfWeek,
+  isValidDate,
   monthBoundary,
   monthGridDates,
   monthStartInWeek,
@@ -42,6 +43,20 @@ describe('monthStartInWeek', () => {
 
   it('月初を含まない週は null', () => {
     expect(monthStartInWeek(yearGridWeeks('2026-09-16').at(-1)!)).toBeNull()
+  })
+})
+
+describe('isValidDate', () => {
+  it('実在する日付を受け付ける', () => {
+    expect(isValidDate('2026-09-16')).toBe(true)
+    expect(isValidDate('2028-02-29')).toBe(true)
+  })
+
+  it('存在しない日付や形式違いを拒否する', () => {
+    expect(isValidDate('2026-02-30')).toBe(false)
+    expect(isValidDate('2027-02-29')).toBe(false)
+    expect(isValidDate('2026-9-16')).toBe(false)
+    expect(isValidDate('')).toBe(false)
   })
 })
 

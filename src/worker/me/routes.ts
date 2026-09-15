@@ -4,6 +4,7 @@ import { deleteCookie } from 'hono/cookie'
 import { SESSION_COOKIE, requireUser } from '../auth/session'
 import { createDb } from '../db/client'
 import { expenses, sessions, users } from '../db/schema'
+import { readJson } from '../lib/http'
 import type { AppEnv, User } from '../types'
 import { validateSettingsInput } from './validation'
 
@@ -18,10 +19,6 @@ function toMe(user: User) {
     timezone: user.timezone,
     trackingStartDate: user.trackingStartDate,
   }
-}
-
-async function readJson(req: Request): Promise<unknown> {
-  return req.json().catch(() => null)
 }
 
 export const meRoutes = new Hono<AppEnv>()

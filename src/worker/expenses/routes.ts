@@ -1,13 +1,15 @@
 import { and, desc, eq, gte, lte } from 'drizzle-orm'
 import { Hono } from 'hono'
 import type { ApiErrorCode } from '../../shared/apiErrors'
+import { isValidDate } from '../../shared/calendar'
 import { todayIn } from '../../shared/timezone'
 import { requireUser } from '../auth/session'
 import { createDb } from '../db/client'
 import { expenses } from '../db/schema'
+import { readJson } from '../lib/http'
 import type { AppEnv, User } from '../types'
 import { limitExpenseWrites } from './rateLimit'
-import { isValidDate, validateExpenseInput } from './validation'
+import { validateExpenseInput } from './validation'
 
 const NOT_FOUND: ApiErrorCode[] = ['not_found']
 
@@ -22,10 +24,6 @@ const expenseColumns = {
 // 入力できる日付の範囲は記録開始日から、ユーザーのタイムゾーンでの今日まで
 function dateRangeFor(user: User) {
   return { minDate: user.trackingStartDate, maxDate: todayIn(user.timezone) }
-}
-
-async function readJson(req: Request): Promise<unknown> {
-  return req.json().catch(() => null)
 }
 
 // どの操作も必ずログイン中のユーザーの支出だけに絞る

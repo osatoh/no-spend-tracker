@@ -1,7 +1,7 @@
 import type { ApiErrorCode } from '../../shared/apiErrors'
 import { isSupportedCurrency, type SupportedCurrency } from '../../shared/currency'
+import { MAX_AMOUNT } from '../../shared/limits'
 import { isValidTimezone } from '../../shared/timezone'
-import { MAX_AMOUNT } from '../expenses/validation'
 
 export type SettingsInput = {
   timezone?: string
@@ -24,15 +24,21 @@ export function validateSettingsInput(body: unknown): SettingsValidationResult {
     return { ok: false, errors: ['invalid_body'] }
   }
 
-  const errors: ApiErrorCode[] = []
-  if (timezone !== undefined && !isValidTimezone(timezone)) errors.push('invalid_timezone')
-  if (currency !== undefined && !isSupportedCurrency(currency)) errors.push('invalid_currency')
-  if (dailyBudget !== undefined && !isValidBudget(dailyBudget)) errors.push('invalid_budget')
-  if (errors.length > 0) return { ok: false, errors }
-
+  // 各項目は1回だけ判定し、有効なら value に、無効ならエラーに振り分ける
   const value: SettingsInput = {}
-  if (isValidTimezone(timezone)) value.timezone = timezone
-  if (isSupportedCurrency(currency)) value.currency = currency
-  if (dailyBudget !== undefined && isValidBudget(dailyBudget)) value.dailyBudget = dailyBudget
-  return { ok: true, value }
+  const errors: ApiErrorCode[] = []
+  if (timezone !== undefined) {
+    if (isValidTimezone(timezone)) value.timezone = timezone
+    else errors.push('invalid_timezone')
+  }
+  if (currency !== undefined) {
+    if (isSupportedCurrency(currency)) value.currency = currency
+    else errors.push('invalid_currency')
+  }
+  if (dailyBudget !== undefined) {
+    if (isValidBudget(dailyBudget)) value.dailyBudget = dailyBudget
+    else errors.push('invalid_budget')
+  }
+
+  return errors.length > 0 ? { ok: false, errors } : { ok: true, value }
 }

@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ApiErrorCode } from '../shared/apiErrors'
+import { MAX_NOTE_LENGTH } from '../shared/limits'
 import { ApiError, createExpense, updateExpense, type Expense } from './api'
-import { fractionDigits, toMajorUnits, toMinorUnits } from './lib/money'
-
-const MAX_NOTE_LENGTH = 100
+import { moneyInputProps, toMajorUnits, toMinorUnits } from './lib/money'
 
 type Props = {
   // null なら新規登録、Expense なら編集
@@ -30,7 +29,6 @@ export function ExpenseDialog({ expense, defaultDate, today, minDate, currency, 
 
   // 編集時は登録時の通貨で入力させる
   const inputCurrency = expense?.currency ?? currency
-  const digits = fractionDigits(inputCurrency)
 
   useEffect(() => {
     dialogRef.current?.showModal()
@@ -83,11 +81,8 @@ export function ExpenseDialog({ expense, defaultDate, today, minDate, currency, 
         <label>
           {t('dialog.amount', { currency: inputCurrency })}
           <input
-            type="number"
-            inputMode={digits === 0 ? 'numeric' : 'decimal'}
+            {...moneyInputProps(inputCurrency)}
             value={amount}
-            min={1 / 10 ** digits}
-            step={1 / 10 ** digits}
             required
             onChange={(e) => setAmount(e.target.value)}
           />

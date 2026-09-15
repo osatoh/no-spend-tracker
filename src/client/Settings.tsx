@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SUPPORTED_CURRENCIES } from '../shared/currency'
 import type { ApiErrorCode } from '../shared/apiErrors'
@@ -6,7 +6,10 @@ import { ApiError, deleteAccount, updateSettings, type Me, type SettingsInput } 
 import { ProjectLinks } from './Footer'
 import { useLocale } from './i18n/useLocale'
 import { LanguageSwitcher } from './LanguageSwitcher'
-import { fractionDigits, toMajorUnits, toMinorUnits } from './lib/money'
+import { moneyInputProps, toMajorUnits, toMinorUnits } from './lib/money'
+
+// ブラウザが対応するタイムゾーン(約400件)。一覧は変わらないので読み込み時に1回だけ並べ替える
+const SUPPORTED_TIMEZONES = [...Intl.supportedValuesOf('timeZone')].sort()
 
 type Props = {
   me: Me
@@ -24,12 +27,14 @@ export function Settings({ me, onMeChange }: Props) {
   const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved' | ApiErrorCode>('idle')
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState<ApiErrorCode | null>(null)
-  const [budget, setBudget] = useState(me.dailyBudget === null ? '' : toMajorUnits(me.dailyBudget, me.currency))
+  const [budget, setBudget] = useState(toMajorUnits(me.dailyBudget, me.currency))
 
-  // 一覧に今の値が含まれない環境でも選択状態を保てるようにする
-  const timezones = [...new Set([me.timezone, ...Intl.supportedValuesOf('timeZone')])].sort()
-  const currencyNames = new Intl.DisplayNames([locale], { type: 'currency' })
-  const budgetDigits = fractionDigits(me.currency)
+  // 一覧に今の値が含まれない環境でも選択状態を保てるようにする。目安額の入力のたびに作り直さない
+  const timezones = useMemo(
+    () => (SUPPORTED_TIMEZONES.includes(me.timezone) ? SUPPORTED_TIMEZONES : [me.timezone, ...SUPPORTED_TIMEZONES]),
+    [me.timezone],
+  )
+  const currencyNames = useMemo(() => new Intl.DisplayNames([locale], { type: 'currency' }), [locale])
 
   async function save(input: SettingsInput) {
     setSaveState('saving')
@@ -37,7 +42,7 @@ export function Settings({ me, onMeChange }: Props) {
       const updated = await updateSettings(input)
       onMeChange(updated)
       // 通貨を変えると目安額は未設定に戻るので、入力欄も合わせる
-      setBudget(updated.dailyBudget === null ? '' : toMajorUnits(updated.dailyBudget, updated.currency))
+      setBudget(toMajorUnits(updated.dailyBudget, updated.currency))
       setSaveState('saved')
     } catch (err) {
       setSaveState(errorCode(err))
@@ -117,10 +122,7 @@ export function Settings({ me, onMeChange }: Props) {
           <div className="inline-field">
             <input
               id="daily-budget"
-              type="number"
-              inputMode={budgetDigits === 0 ? 'numeric' : 'decimal'}
-              min={1 / 10 ** budgetDigits}
-              step={1 / 10 ** budgetDigits}
+              {...moneyInputProps(me.currency)}
               value={budget}
               onChange={(e) => setBudget(e.target.value)}
             />
