@@ -10,6 +10,7 @@ const user: User = {
   name: 'User',
   pictureUrl: null,
   currency: 'JPY',
+  dailyBudget: null,
   timezone: 'Asia/Tokyo',
   trackingStartDate: '2026-09-01',
   createdAt: new Date('2026-09-01T00:00:00Z'),

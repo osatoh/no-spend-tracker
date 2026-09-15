@@ -2,10 +2,11 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SUPPORTED_CURRENCIES } from '../shared/currency'
 import type { ApiErrorCode } from '../shared/apiErrors'
-import { ApiError, deleteAccount, updateSettings, type Me } from './api'
+import { ApiError, deleteAccount, updateSettings, type Me, type SettingsInput } from './api'
 import { ProjectLinks } from './Footer'
 import { useLocale } from './i18n/useLocale'
 import { LanguageSwitcher } from './LanguageSwitcher'
+import { fractionDigits, toMajorUnits, toMinorUnits } from './lib/money'
 
 type Props = {
   me: Me
@@ -23,19 +24,32 @@ export function Settings({ me, onMeChange }: Props) {
   const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved' | ApiErrorCode>('idle')
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState<ApiErrorCode | null>(null)
+  const [budget, setBudget] = useState(me.dailyBudget === null ? '' : toMajorUnits(me.dailyBudget, me.currency))
 
   // 一覧に今の値が含まれない環境でも選択状態を保てるようにする
   const timezones = [...new Set([me.timezone, ...Intl.supportedValuesOf('timeZone')])].sort()
   const currencyNames = new Intl.DisplayNames([locale], { type: 'currency' })
+  const budgetDigits = fractionDigits(me.currency)
 
-  async function save(input: { timezone?: string; currency?: string }) {
+  async function save(input: SettingsInput) {
     setSaveState('saving')
     try {
-      onMeChange(await updateSettings(input))
+      const updated = await updateSettings(input)
+      onMeChange(updated)
+      // 通貨を変えると目安額は未設定に戻るので、入力欄も合わせる
+      setBudget(updated.dailyBudget === null ? '' : toMajorUnits(updated.dailyBudget, updated.currency))
       setSaveState('saved')
     } catch (err) {
       setSaveState(errorCode(err))
     }
+  }
+
+  function saveBudget() {
+    // 空欄なら未設定に戻す
+    if (budget.trim() === '') return save({ dailyBudget: null })
+    const minor = toMinorUnits(budget, me.currency)
+    if (minor === null) return setSaveState('invalid_budget')
+    return save({ dailyBudget: minor })
   }
 
   async function handleDelete() {
@@ -92,6 +106,30 @@ export function Settings({ me, onMeChange }: Props) {
           </select>
           <small>{t('settings.currencyHelp')}</small>
         </label>
+        <form
+          className="settings-field"
+          onSubmit={(e) => {
+            e.preventDefault()
+            saveBudget()
+          }}
+        >
+          <label htmlFor="daily-budget">{t('settings.dailyBudget', { currency: me.currency })}</label>
+          <div className="inline-field">
+            <input
+              id="daily-budget"
+              type="number"
+              inputMode={budgetDigits === 0 ? 'numeric' : 'decimal'}
+              min={1 / 10 ** budgetDigits}
+              step={1 / 10 ** budgetDigits}
+              value={budget}
+              onChange={(e) => setBudget(e.target.value)}
+            />
+            <button type="submit" disabled={saveState === 'saving'}>
+              {t('settings.save')}
+            </button>
+          </div>
+          <small>{t('settings.dailyBudgetHelp')}</small>
+        </form>
         <p className="save-status" role="status">
           {saveState === 'saved' && t('settings.saved')}
           {saveState !== 'idle' && saveState !== 'saving' && saveState !== 'saved' && (

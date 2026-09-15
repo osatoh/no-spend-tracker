@@ -1,10 +1,13 @@
 import type { ApiErrorCode } from '../shared/apiErrors'
+import type { ExchangeRates } from '../shared/currency'
 
 export type Me = {
   name: string | null
   email: string
   pictureUrl: string | null
   currency: string
+  // 1日の目安額(currency の最小単位)。未設定なら null
+  dailyBudget: number | null
   timezone: string
   trackingStartDate: string
 }
@@ -40,10 +43,18 @@ export async function fetchMe(): Promise<Me | null> {
   return ((await res.json()) as { user: Me | null }).user
 }
 
-// タイムゾーン・通貨の変更。変更後のユーザー情報を返す
-export async function updateSettings(input: { timezone?: string; currency?: string }): Promise<Me> {
+export type SettingsInput = { timezone?: string; currency?: string; dailyBudget?: number | null }
+
+// タイムゾーン・通貨・目安額の変更。変更後のユーザー情報を返す
+export async function updateSettings(input: SettingsInput): Promise<Me> {
   const res = await send('/api/me', { method: 'PATCH', body: JSON.stringify(input) })
   return ((await res.json()) as { user: Me }).user
+}
+
+// 表示通貨(base)への換算に使う今日の為替レート
+export async function fetchRates(base: string): Promise<ExchangeRates> {
+  const res = await send(`/api/rates?base=${encodeURIComponent(base)}`)
+  return ((await res.json()) as { rates: ExchangeRates }).rates
 }
 
 // 退会。アカウントとすべての支出を削除し、ログアウト状態にする

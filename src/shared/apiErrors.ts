@@ -9,6 +9,8 @@ export type ApiErrorCode =
   | 'note_too_long'
   | 'invalid_timezone'
   | 'invalid_currency'
+  | 'invalid_budget'
+  | 'rates_unavailable'
   | 'not_found'
   | 'rate_limited'
   | 'request_failed'

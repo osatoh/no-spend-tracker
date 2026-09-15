@@ -14,6 +14,7 @@ function toMe(user: User) {
     email: user.email,
     pictureUrl: user.pictureUrl,
     currency: user.currency,
+    dailyBudget: user.dailyBudget,
     timezone: user.timezone,
     trackingStartDate: user.trackingStartDate,
   }
@@ -31,13 +32,19 @@ meRoutes.get('/', (c) => {
   return c.json({ user: user && toMe(user) })
 })
 
-// タイムゾーン・通貨の変更。記録開始日は変えない
+// タイムゾーン・通貨・目安額の変更。記録開始日は変えない
 meRoutes.patch('/', async (c) => {
   const user = requireUser(c)
   const result = validateSettingsInput(await readJson(c.req.raw))
   if (!result.ok) return c.json({ errors: result.errors }, 400)
 
-  const [updated] = await createDb(c.env).update(users).set(result.value).where(eq(users.id, user.id)).returning()
+  // 目安額は表示通貨の金額なので、通貨を変えたら(同時に指定されない限り)未設定に戻して入れ直してもらう
+  const changes = { ...result.value }
+  if (changes.currency && changes.currency !== user.currency && changes.dailyBudget === undefined) {
+    changes.dailyBudget = null
+  }
+
+  const [updated] = await createDb(c.env).update(users).set(changes).where(eq(users.id, user.id)).returning()
   return c.json({ user: toMe(updated) })
 })
 

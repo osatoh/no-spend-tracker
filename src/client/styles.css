@@ -68,6 +68,80 @@ button,
   margin-top: 1rem;
 }
 
+.stats {
+  margin-top: 1.5rem;
+}
+
+.stats h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.stats-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 0.75rem;
+}
+
+.stats-card {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.stats-card h3 {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.stats-card p {
+  margin: 0.25rem 0 0;
+}
+
+.stats-rate {
+  color: var(--accent);
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.stats-sub,
+.stats-note {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.stats-table-scroll {
+  overflow-x: auto;
+  margin-top: 0.75rem;
+}
+
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.stats-table th,
+.stats-table td {
+  padding: 0.35rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.inline-field {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.inline-field input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.35rem;
+  font: inherit;
+}
+
 .title-link {
   color: inherit;
   text-decoration: none;

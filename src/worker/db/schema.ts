@@ -13,6 +13,8 @@ export const users = sqliteTable(
     pictureUrl: text('picture_url'),
     // 表示・入力に使う通貨(ISO 4217)。当面は JPY のみ
     currency: text('currency').notNull().default('JPY'),
+    // 1日の支出の目安額(currency の最小単位)。節約額の推定に使う。未設定なら null、通貨を変えたら null に戻す
+    dailyBudget: integer('daily_budget'),
     // 日付の区切りに使うタイムゾーン(IANA 名。例: Asia/Tokyo, Europe/London)
     timezone: text('timezone').notNull().default('Asia/Tokyo'),
     // 記録開始日(YYYY-MM-DD)。サインアップ時のタイムゾーンで確定させ、後でタイムゾーンを変えてもずらさない

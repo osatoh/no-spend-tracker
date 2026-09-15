@@ -12,6 +12,7 @@ import { Footer } from './Footer'
 import { useLocale } from './i18n/useLocale'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { Settings } from './Settings'
+import { StatsPanel } from './StatsPanel'
 import { StreakBanner } from './StreakBanner'
 import { formatDate } from './lib/dateFormat'
 import { formatMoney } from './lib/money'
@@ -131,6 +132,8 @@ function Home({ me, expenses, onExpensesChange }: HomeProps) {
       <StreakBanner streak={streak} />
 
       {isNarrow ? <MonthCalendar {...calendarProps} /> : <YearGrid {...calendarProps} />}
+
+      <StatsPanel me={me} expenses={expenses} today={today} />
 
       <button className="primary add-expense" onClick={() => setDialog({ kind: 'new', date: today })}>
         {t('expenses.addToday')}

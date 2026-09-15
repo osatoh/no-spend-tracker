@@ -1,7 +1,6 @@
-// 通貨の小数桁数(JPY: 0, GBP: 2)
-export function fractionDigits(currency: string): number {
-  return new Intl.NumberFormat('en', { style: 'currency', currency }).resolvedOptions().maximumFractionDigits ?? 0
-}
+import { fractionDigits } from '../../shared/currency'
+
+export { fractionDigits }
 
 // 最小単位の整数を通貨表記にする(例: 350, GBP → £3.50)
 export function formatMoney(amountMinor: number, currency: string, locale: string): string {
