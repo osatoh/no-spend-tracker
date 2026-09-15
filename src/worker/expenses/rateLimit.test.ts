@@ -8,6 +8,7 @@ const user: User = {
   googleSub: 'sub-1',
   email: 'user@example.com',
   name: 'User',
+  pictureUrl: null,
   currency: 'JPY',
   timezone: 'Asia/Tokyo',
   trackingStartDate: '2026-09-01',

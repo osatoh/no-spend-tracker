@@ -50,6 +50,7 @@ authRoutes.get(
       googleSub: googleUser.id,
       email: googleUser.email,
       name: googleUser.name ?? null,
+      pictureUrl: googleUser.picture ?? null,
       timezone,
     })
     const { token, expiresAt } = await createSession(db, user.id)
@@ -71,10 +72,10 @@ authRoutes.post('/logout', async (c) => {
   return c.redirect('/')
 })
 
-// 初回ログインならユーザーを作る。既存ユーザーはメールと名前だけ更新し、タイムゾーンと記録開始日は変えない
+// 初回ログインならユーザーを作る。既存ユーザーは Google 側のプロフィール(メール・名前・画像)だけ更新し、タイムゾーンと記録開始日は変えない
 async function upsertGoogleUser(
   db: Db,
-  params: { googleSub: string; email: string; name: string | null; timezone: string },
+  params: { googleSub: string; email: string; name: string | null; pictureUrl: string | null; timezone: string },
 ): Promise<User> {
   const [user] = await db
     .insert(users)
@@ -83,12 +84,13 @@ async function upsertGoogleUser(
       googleSub: params.googleSub,
       email: params.email,
       name: params.name,
+      pictureUrl: params.pictureUrl,
       timezone: params.timezone,
       trackingStartDate: todayIn(params.timezone),
     })
     .onConflictDoUpdate({
       target: users.googleSub,
-      set: { email: params.email, name: params.name },
+      set: { email: params.email, name: params.name, pictureUrl: params.pictureUrl },
     })
     .returning()
   return user

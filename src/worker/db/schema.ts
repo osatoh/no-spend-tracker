@@ -9,6 +9,8 @@ export const users = sqliteTable(
     googleSub: text('google_sub').notNull(),
     email: text('email').notNull(),
     name: text('name'),
+    // Google のプロフィール画像の URL。ログインのたびに更新する
+    pictureUrl: text('picture_url'),
     // 表示・入力に使う通貨(ISO 4217)。当面は JPY のみ
     currency: text('currency').notNull().default('JPY'),
     // 日付の区切りに使うタイムゾーン(IANA 名。例: Asia/Tokyo, Europe/London)
